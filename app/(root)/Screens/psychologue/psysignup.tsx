@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, Pressable, Image, Alert, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native'
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
-import * as ImagePicker from 'expo-image-picker'
-import { supabase } from '@/utils/supabaseClient'
-import { uploadProfilePicture } from '@/utils/uploadProfilePicture'
-import { uploadCertificate } from '@/utils/uploadCertificate'
-import { useRouter } from 'expo-router'
+import React, { useState } from 'react';
+import { View, Text, TextInput, Pressable, Image, Alert, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
+import { supabase } from '@/utils/supabaseClient';
+import { uploadProfilePicture } from '@/utils/uploadProfilePicture';
+import { uploadCertificate } from '@/utils/uploadCertificate';
+import { useRouter } from 'expo-router';
 
 const SPECIALTIES = [
     'مختص في المعرفي السلوكي',
@@ -19,11 +19,11 @@ const SPECIALTIES = [
     'طبيب متنقل',
     'معالج التأهيل الوظيفي',
     'ممرض'
-]
+];
 
 export default function PsychologueSignup() {
-    const [step, setStep] = useState(1)
-    const router = useRouter()
+    const [step, setStep] = useState(1);
+    const router = useRouter();
     
     // Step 1: Basic Info
     const [fullName, setFullName] = useState('')
@@ -251,24 +251,24 @@ export default function PsychologueSignup() {
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-gray-50">
             <ScrollView
                 className="flex-1 p-5"
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 20 }}
             >
-                <Text className="text-2xl font-bold mb-5 text-center">تسجيل حساب أخصائي نفسي</Text>
+                <Text className="text-2xl font-bold mb-5 text-center text-gray-800">تسجيل حساب أخصائي نفسي</Text>
 
                 {/* Step 1: Basic Info */}
                 {step === 1 && (
                     <>
                         <Pressable onPress={pickImage} className="p-3 bg-blue-600 rounded-full active:opacity-70 mb-4">
-                            <Text className="text-white text-center">اختيار صورة شخصية</Text>
+                            <Text className="text-white text-center font-medium">اختيار صورة شخصية</Text>
                         </Pressable>
 
-                        {image && <Image source={{ uri: image }} className="w-32 h-32 rounded-full mt-4 self-center mb-4" />}
+                        {image && <Image source={{ uri: image }} className="w-32 h-32 rounded-full mt-4 self-center mb-4 shadow-md" />}
 
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 focus:ring focus:ring-blue-300"
                             placeholder="الاسم الكامل"
                             value={fullName}
                             onChangeText={setFullName}
@@ -278,7 +278,7 @@ export default function PsychologueSignup() {
                             className="border border-gray-300 bg-lime-200 rounded-lg p-3 mb-4 active:opacity-70"
                             onPress={() => setShowPicker(true)}
                         >
-                            <Text className="text-center">{dob || 'اختر تاريخ الميلاد'}</Text>
+                            <Text className="text-center text-gray-700">{dob || 'اختر تاريخ الميلاد'}</Text>
                         </Pressable>
 
                         {showPicker && (
@@ -291,7 +291,7 @@ export default function PsychologueSignup() {
                             />
                         )}
 
-                        <Pressable className="bg-blue-500 p-4 rounded-xl mt-4 active:opacity-70" onPress={handleNext}>
+                        <Pressable className="bg-blue-500 p-4 rounded-xl mt-4 active:opacity-70 shadow-lg" onPress={handleNext}>
                             <Text className="text-white text-center text-lg font-semibold">التالي</Text>
                         </Pressable>
                     </>
@@ -300,13 +300,13 @@ export default function PsychologueSignup() {
                 {/* Step 2: Professional Info */}
                 {step === 2 && (
                     <>
-                        <Text className="text-lg font-semibold mb-2 text-right">التخصصات</Text>
+                        <Text className="text-lg font-semibold mb-2 text-right text-gray-800">التخصصات</Text>
                         <View className="flex-row flex-wrap mb-4">
                             {SPECIALTIES.map((spec) => (
                                 <Pressable
                                     key={spec}
                                     onPress={() => toggleSpecialty(spec)}
-                                    className={`px-3 py-2 m-1 rounded-full border ${
+                                    className={`px-3 py-2 m-1 rounded-full border shadow-md ${
                                         specialties.includes(spec)
                                             ? 'bg-green-500 border-green-700'
                                             : 'bg-gray-200 border-gray-400'
@@ -320,7 +320,7 @@ export default function PsychologueSignup() {
                         </View>
 
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 h-24 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 h-24 text-right focus:ring focus:ring-blue-300"
                             placeholder="نبذة عنك"
                             multiline
                             value={bio}
@@ -328,7 +328,7 @@ export default function PsychologueSignup() {
                         />
 
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right focus:ring focus:ring-blue-300"
                             placeholder="السعر (بالدينار)"
                             keyboardType="numeric"
                             value={rate}
@@ -336,7 +336,7 @@ export default function PsychologueSignup() {
                         />
 
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right focus:ring focus:ring-blue-300"
                             placeholder="رقم الهاتف"
                             keyboardType="phone-pad"
                             value={phone}
@@ -344,7 +344,7 @@ export default function PsychologueSignup() {
                         />
 
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 focus:ring focus:ring-blue-300"
                             placeholder="البريد الإلكتروني"
                             keyboardType="email-address"
                             autoCapitalize="none"
@@ -353,7 +353,7 @@ export default function PsychologueSignup() {
                         />
 
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right focus:ring focus:ring-blue-300"
                             placeholder="كلمة المرور"
                             secureTextEntry
                             value={password}
@@ -361,10 +361,10 @@ export default function PsychologueSignup() {
                         />
 
                         <View className="flex-row justify-between mt-4">
-                            <Pressable className="bg-gray-400 p-4 rounded-xl flex-1 mr-2 active:opacity-70" onPress={handleBack}>
+                            <Pressable className="bg-gray-400 p-4 rounded-xl flex-1 mr-2 active:opacity-70 shadow-md" onPress={handleBack}>
                                 <Text className="text-white text-center text-lg font-semibold">السابق</Text>
                             </Pressable>
-                            <Pressable className="bg-blue-500 p-4 rounded-xl flex-1 ml-2 active:opacity-70" onPress={handleNext}>
+                            <Pressable className="bg-blue-500 p-4 rounded-xl flex-1 ml-2 active:opacity-70 shadow-md" onPress={handleNext}>
                                 <Text className="text-white text-center text-lg font-semibold">التالي</Text>
                             </Pressable>
                         </View>
@@ -375,51 +375,51 @@ export default function PsychologueSignup() {
                 {step === 3 && (
                     <>
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right focus:ring focus:ring-blue-300"
                             placeholder="مكان الميلاد"
                             value={placeOfBirth}
                             onChangeText={setPlaceOfBirth}
                         />
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right focus:ring focus:ring-blue-300"
                             placeholder="عنوان الإقامة الحالي"
                             value={currentAddress}
                             onChangeText={setCurrentAddress}
                         />
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right focus:ring focus:ring-blue-300"
                             placeholder="رقم الرخصة المهنية"
                             value={licenseNumber}
                             onChangeText={setLicenseNumber}
                         />
                         <TextInput
-                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right"
+                            className="border border-gray-300 rounded-lg p-3 mb-4 text-right focus:ring focus:ring-blue-300"
                             placeholder="سنوات الخبرة"
                             keyboardType="numeric"
                             value={yearsOfExperience}
                             onChangeText={setYearsOfExperience}
                         />
 
-                        <Text className="text-lg font-semibold mb-2 text-right">رفع الشهادة المهنية *</Text>
+                        <Text className="text-lg font-semibold mb-2 text-right text-gray-800">رفع الشهادة المهنية *</Text>
                         <Pressable 
                             onPress={pickCertificate} 
-                            className="p-3 bg-blue-600 rounded-lg active:opacity-70 mb-4"
+                            className="p-3 bg-blue-600 rounded-lg active:opacity-70 mb-4 shadow-md"
                         >
-                            <Text className="text-white text-center">اختيار الشهادة</Text>
+                            <Text className="text-white text-center font-medium">اختيار الشهادة</Text>
                         </Pressable>
                         {certificate && (
                             <View className="mb-4">
-                                <Image source={{ uri: certificate }} className="w-full h-48 rounded-lg" />
+                                <Image source={{ uri: certificate }} className="w-full h-48 rounded-lg shadow-md" />
                                 <Text className="text-green-600 text-sm text-right mt-2">تم اختيار الشهادة</Text>
                             </View>
                         )}
 
                         <View className="flex-row justify-between mt-4">
-                            <Pressable className="bg-gray-400 p-4 rounded-xl flex-1 mr-2 active:opacity-70" onPress={handleBack}>
+                            <Pressable className="bg-gray-400 p-4 rounded-xl flex-1 mr-2 active:opacity-70 shadow-md" onPress={handleBack}>
                                 <Text className="text-white text-center text-lg font-semibold">السابق</Text>
                             </Pressable>
                             <Pressable
-                                className="bg-green-500 p-4 rounded-xl flex-1 ml-2 active:opacity-70"
+                                className="bg-green-500 p-4 rounded-xl flex-1 ml-2 active:opacity-70 shadow-lg"
                                 onPress={handleSignUp}
                                 disabled={loading}
                             >
@@ -434,5 +434,5 @@ export default function PsychologueSignup() {
                 )}
             </ScrollView>
         </SafeAreaView>
-    )
+    );
 }

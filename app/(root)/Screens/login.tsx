@@ -25,29 +25,37 @@ export default function Login() {
     }
 
     return (
-        <View className="flex-1 justify-center items-center px-6">
+        <View className="flex-1 justify-center items-center bg-gray-100 px-6">
             <KeyboardAvoidingView behavior="padding" className="flex-1 w-full items-center justify-center">
                 <TextInput
-                    className="w-full border border-black rounded-3xl p-3 mb-4 text-black"
+                    className="w-full border border-gray-300 rounded-lg p-4 mb-4 text-gray-800 shadow-sm focus:ring focus:ring-blue-300"
                     placeholder="البريد الإلكتروني"
                     placeholderTextColor="#888"
                     autoCapitalize="none"
                     keyboardType="email-address"
                     value={email}
                     onChangeText={setEmail}
+                    style={{
+                        borderColor: '#d1d5db', // gray-300
+                        shadowColor: '#000',
+                    }}
                 />
 
                 <TextInput
-                    className="w-full border border-black rounded-3xl p-3 mb-4 text-black"
+                    className="w-full border border-gray-300 rounded-lg p-4 mb-4 text-gray-800 shadow-sm focus:ring focus:ring-blue-300"
                     placeholder="كلمة المرور"
                     placeholderTextColor="#888"
                     secureTextEntry
                     value={password}
                     onChangeText={setPassword}
+                    style={{
+                        borderColor: '#d1d5db', // gray-300
+                        shadowColor: '#000',
+                    }}
                 />
 
                 <Pressable
-                    className="w-full bg-black py-3 rounded-lg mb-3 active:opacity-70"
+                    className={`w-full py-3 rounded-lg mb-3 ${loading ? 'bg-gray-400' : 'bg-blue-600'} active:opacity-70`}
                     onPress={handleSignIn}
                     disabled={loading}
                 >
@@ -59,10 +67,10 @@ export default function Login() {
                 </Pressable>
 
                 <View className="flex-row justify-center items-center">
-                    <Link href="/Screens/signup" className="font-bold text-lg underline text-blue-500">
+                    <Link href="/Screens/signup" className="text-blue-500 underline font-medium">
                         <Text> انضم إلينا الآن!</Text>
                     </Link>
-                    <Text className="font-bold text-lg"> ليس لديك حساب؟ </Text>
+                    <Text className="text-gray-700 font-medium"> ليس لديك حساب؟ </Text>
                 </View>
             </KeyboardAvoidingView>
         </View>

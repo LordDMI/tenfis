@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import {
-    View,
-    Text,
-    ScrollView,
-    Pressable,
-    Image,
-    Alert,
-    ActivityIndicator,
-    Modal,
-    TextInput,
-    SafeAreaView,
-} from 'react-native'
 import { supabase } from '@/utils/supabaseClient'
-import { useRouter, useLocalSearchParams } from 'expo-router'
+import { uploadProfilePicture } from '@/utils/uploadProfilePicture'
 import { Ionicons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
-import { uploadProfilePicture } from '@/utils/uploadProfilePicture'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import React, { useCallback, useEffect, useState } from 'react'
+import {
+    ActivityIndicator,
+    Alert,
+    Image,
+    Modal,
+    Pressable,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    TextInput,
+    View,
+} from 'react-native'
 
 interface Profile {
     id: string
@@ -340,7 +340,11 @@ export default function ProfileScreen() {
 
     const toggleComments = (postId: string) => {
         const isOpen = showComments[postId]
-        setShowComments(prev => ({ ...prev, [postId]: !isOpen }))
+        
+    setShowComments(prev => ({
+        ...prev,
+        [postId]: !isOpen,
+    }));
         if (!isOpen && !comments[postId]) {
             fetchComments(postId)
         }
@@ -508,34 +512,34 @@ export default function ProfileScreen() {
 
     if (loading) {
         return (
-            <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" />
+            <View className="flex-1 justify-center items-center bg-gray-100">
+                <ActivityIndicator size="large" color="#3b82f6" />
             </View>
         )
     }
 
     if (!profile) {
         return (
-            <View className="flex-1 justify-center items-center">
-                <Text className="text-gray-500">فشل تحميل الملف الشخصي</Text>
+            <View className="flex-1 justify-center items-center bg-gray-100">
+                <Text className="text-gray-500 text-lg">فشل تحميل الملف الشخصي</Text>
             </View>
         )
     }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
-            <View className="bg-white px-4 py-3 border-b border-gray-200 flex-row justify-between items-center">
-                <Text className="text-2xl font-bold text-right">الملف الشخصي</Text>
+            <View className="bg-white px-6 py-4 border-b border-gray-300 flex-row justify-between items-center shadow-md">
+                <Text className="text-2xl font-bold text-right text-gray-900">الملف الشخصي</Text>
                 {!editing && isOwnProfile && !(profile.role === 'psychologue' && !profile.is_verified) && (
-                    <Pressable onPress={handleEdit} className="p-2">
-                        <Ionicons name="create-outline" size={24} color="#3b82f6" />
+                    <Pressable onPress={handleEdit} className="p-3">
+                        <Ionicons name="create-outline" size={24} color="#2563eb" />
                     </Pressable>
                 )}
             </View>
 
             <ScrollView className="flex-1">
                 {/* Avatar Section */}
-                <View className="items-center py-6 bg-white border-b border-gray-200">
+                <View className="items-center py-8 bg-white border-b border-gray-300">
                     <Pressable
                         onPress={() => editing && setShowImagePicker(true)}
                         disabled={!editing}
@@ -543,109 +547,96 @@ export default function ProfileScreen() {
                         {profile.avatar_url ? (
                             <Image
                                 source={{ uri: profile.avatar_url }}
-                                className="w-32 h-32 rounded-full border-4 border-blue-500"
+                                className="w-36 h-36 rounded-full border-4 border-blue-600 shadow-lg"
                             />
                         ) : (
-                            <View className="w-32 h-32 rounded-full bg-gray-300 items-center justify-center border-4 border-blue-500">
-                                <Ionicons name="person" size={64} color="gray" />
+                            <View className="w-36 h-36 rounded-full bg-gray-400 items-center justify-center border-4 border-blue-600 shadow-lg">
+                                <Ionicons name="person" size={72} color="white" />
                             </View>
                         )}
                     </Pressable>
                     {editing && (
                         <Pressable
                             onPress={() => setShowImagePicker(true)}
-                            className="mt-4 bg-blue-500 px-4 py-2 rounded-lg"
+                            className="mt-4 bg-blue-600 px-5 py-3 rounded-lg shadow-md hover:bg-blue-700"
                         >
                             <Text className="text-white font-semibold">تغيير الصورة</Text>
                         </Pressable>
                     )}
                     {profile.is_verified && profile.role === 'psychologue' && (
-                        <View className="flex-row items-center mt-2">
+                        <View className="flex-row items-center mt-3">
                             <Ionicons name="checkmark-circle" size={20} color="#10b981" />
-                            <Text className="mr-2 text-green-600 font-semibold">متحقق</Text>
+                            <Text className="ml-2 text-green-700 font-semibold">متحقق</Text>
                         </View>
                     )}
                 </View>
 
                 {/* Profile Information */}
-                <View className="bg-white mt-4 p-4">
-                    <View className="mb-4">
-                        <Text className="text-gray-600 text-sm mb-2 text-right">الاسم الكامل</Text>
+                <View className="bg-white mt-6 p-6 rounded-lg shadow-md">
+                    <View className="mb-6">
+                        <Text className="text-gray-700 text-sm mb-2 text-right">الاسم الكامل</Text>
                         {editing ? (
                             <TextInput
-                                className="border border-gray-300 rounded-lg p-3 text-right"
+                                className="border border-gray-300 rounded-lg p-4 text-right focus:ring focus:ring-blue-400"
                                 value={fullName}
                                 onChangeText={setFullName}
                                 placeholder="الاسم الكامل"
                             />
                         ) : (
-                            <Text className="text-lg font-semibold text-right">{profile.full_name || 'غير محدد'}</Text>
+                            <Text className="text-lg font-semibold text-right text-gray-900">{profile.full_name || 'غير محدد'}</Text>
                         )}
                     </View>
 
-                    <View className="mb-4">
-                        <Text className="text-gray-600 text-sm mb-2 text-right">البريد الإلكتروني</Text>
-                        <Text className="text-lg text-right">{profile.email}</Text>
+                    <View className="mb-6">
+                        <Text className="text-gray-700 text-sm mb-2 text-right">البريد الإلكتروني</Text>
+                        <Text className="text-lg text-right text-gray-900">{profile.email}</Text>
                     </View>
 
-                    <View className="mb-4">
-                        <Text className="text-gray-600 text-sm mb-2 text-right">رقم الهاتف</Text>
+                    <View className="mb-6">
+                        <Text className="text-gray-700 text-sm mb-2 text-right">رقم الهاتف</Text>
                         {editing ? (
                             <TextInput
-                                className="border border-gray-300 rounded-lg p-3 text-right"
+                                className="border border-gray-300 rounded-lg p-4 text-right focus:ring focus:ring-blue-400"
                                 value={phone}
                                 onChangeText={setPhone}
                                 placeholder="رقم الهاتف"
                                 keyboardType="phone-pad"
                             />
                         ) : (
-                            <Text className="text-lg text-right">{profile.phone || 'غير محدد'}</Text>
+                            <Text className="text-lg text-right text-gray-900">{profile.phone || 'غير محدد'}</Text>
                         )}
                     </View>
 
-                    {profile.dob && (
-                        <View className="mb-4">
-                            <Text className="text-gray-600 text-sm mb-2 text-right">تاريخ الميلاد</Text>
-                            <Text className="text-lg text-right">{formatProfileDate(profile.dob)}</Text>
-                        </View>
-                    )}
-
-                    {profile.place_of_birth && (
-                        <View className="mb-4">
-                            <Text className="text-gray-600 text-sm mb-2 text-right">مكان الميلاد</Text>
-                            <Text className="text-lg text-right">{profile.place_of_birth}</Text>
-                        </View>
-                    )}
-
+                    {/* Additional fields for patient and psychologue roles */}
                     {profile.role === 'patient' && (
                         <>
-                            <View className="mb-4">
-                                <Text className="text-gray-600 text-sm mb-2 text-right">العنوان الحالي</Text>
+                            <View className="mb-6">
+                                <Text className="text-gray-700 text-sm mb-2 text-right">العنوان الحالي</Text>
                                 {editing ? (
                                     <TextInput
-                                        className="border border-gray-300 rounded-lg p-3 text-right"
+                                        className="border border-gray-300 rounded-lg p-4 text-right focus:ring focus:ring-blue-400"
                                         value={currentAddress}
                                         onChangeText={setCurrentAddress}
                                         placeholder="العنوان الحالي"
                                         multiline
                                     />
                                 ) : (
-                                    <Text className="text-lg text-right">{profile.current_address || 'غير محدد'}</Text>
+                                    <Text className="text-lg text-right text-gray-900">{profile.current_address || 'غير محدد'}</Text>
                                 )}
                             </View>
 
-                            <View className="mb-4">
-                                <Text className="text-gray-600 text-sm mb-2 text-right">الحساسية أو الأمراض</Text>
+                            <View className="mb-6">
+                                <Text className="text-gray-700 text-sm mb-2 text-right">الحساسية أو الأمراض</Text>
                                 {editing ? (
                                     <TextInput
-                                        className="border border-gray-300 rounded-lg p-3 h-24 text-right"
+                                        className="border border-gray-300 rounded-lg p-4 text-right focus:ring focus:ring-blue-400"
                                         value={allergies}
                                         onChangeText={setAllergies}
                                         placeholder="الحساسية أو الأمراض"
                                         multiline
                                     />
                                 ) : (
-                                    <Text className="text-lg text-right">{profile.allergies || 'لا يوجد'}</Text>
+                                    <Text className="text-lg text-right text-gray-900">{profile.allergies || 'لا يوجد'}</Text>
                                 )}
                             </View>
                         </>
@@ -653,94 +644,59 @@ export default function ProfileScreen() {
 
                     {profile.role === 'psychologue' && (
                         <>
-                            {profile.specialties && profile.specialties.length > 0 && (
-                                <View className="mb-4">
-                                    <Text className="text-gray-600 text-sm mb-2 text-right">التخصصات</Text>
-                                    <View className="flex-row flex-wrap">
-                                        {profile.specialties.map((spec, idx) => (
-                                            <View
-                                                key={idx}
-                                                className="bg-blue-100 px-3 py-1 rounded-full mr-2 mb-2"
-                                            >
-                                                <Text className="text-blue-700">{spec}</Text>
-                                            </View>
-                                        ))}
-                                    </View>
-                                </View>
-                            )}
-
-                            <View className="mb-4">
-                                <Text className="text-gray-600 text-sm mb-2 text-right">نبذة</Text>
+                            <View className="mb-6">
+                                <Text className="text-gray-700 text-sm mb-2 text-right">نبذة</Text>
                                 {editing ? (
                                     <TextInput
-                                        className="border border-gray-300 rounded-lg p-3 h-24 text-right"
+                                        className="border border-gray-300 rounded-lg p-4 text-right focus:ring focus:ring-blue-400"
                                         value={bio}
                                         onChangeText={setBio}
                                         placeholder="نبذة عنك"
                                         multiline
                                     />
                                 ) : (
-                                    <Text className="text-lg text-right">{profile.bio || 'غير محدد'}</Text>
+                                    <Text className="text-lg text-right text-gray-900">{profile.bio || 'غير محدد'}</Text>
                                 )}
                             </View>
 
-                            {profile.rate && (
-                                <View className="mb-4">
-                                    <Text className="text-gray-600 text-sm mb-2 text-right">السعر (بالدينار)</Text>
-                                    {editing ? (
-                                        <TextInput
-                                            className="border border-gray-300 rounded-lg p-3 text-right"
-                                            value={rate}
-                                            onChangeText={setRate}
-                                            placeholder="السعر"
-                                            keyboardType="numeric"
-                                        />
-                                    ) : (
-                                        <Text className="text-lg font-bold text-green-600 text-right">
-                                            {profile.rate} د.أ
-                                        </Text>
-                                    )}
-                                </View>
-                            )}
-
-                            {profile.years_of_experience && (
-                                <View className="mb-4">
-                                    <Text className="text-gray-600 text-sm mb-2 text-right">سنوات الخبرة</Text>
-                                    <Text className="text-lg text-right">{profile.years_of_experience} سنة</Text>
-                                </View>
-                            )}
-
-                            {profile.license_number && (
-                                <View className="mb-4">
-                                    <Text className="text-gray-600 text-sm mb-2 text-right">رقم الرخصة</Text>
-                                    <Text className="text-lg text-right">{profile.license_number}</Text>
-                                </View>
-                            )}
+                            <View className="mb-6">
+                                <Text className="text-gray-700 text-sm mb-2 text-right">السعر (بالدينار)</Text>
+                                {editing ? (
+                                    <TextInput
+                                        className="border border-gray-300 rounded-lg p-4 text-right focus:ring focus:ring-blue-400"
+                                        value={rate}
+                                        onChangeText={setRate}
+                                        placeholder="السعر"
+                                        keyboardType="numeric"
+                                    />
+                                ) : (
+                                    <Text className="text-lg font-bold text-green-700 text-right">{profile.rate} د.أ</Text>
+                                )}
+                            </View>
                         </>
                     )}
                 </View>
 
                 {/* Posts Section */}
-                <View className="bg-white mt-4 p-4">
-                    <Text className="text-xl font-bold mb-4 text-right">المنشورات</Text>
+                <View className="bg-white mt-6 p-6 rounded-lg shadow-md">
+                    <Text className="text-xl font-bold mb-6 text-right text-gray-900">المنشورات</Text>
                     {posts.length === 0 ? (
                         <Text className="text-gray-500 text-center py-8">لا توجد منشورات</Text>
                     ) : (
                         <View>
                             {posts.map(post => (
-                                <View key={post.id} className="mb-4 pb-4 border-b border-gray-200">
+                                <View key={post.id} className="mb-6 pb-6 border-b border-gray-300">
                                     {post.content && (
-                                        <Text className="text-right mb-2 leading-6">{post.content}</Text>
+                                        <Text className="text-right mb-4 leading-6 text-gray-900">{post.content}</Text>
                                     )}
                                     {post.image_url && (
-                                        <Image source={{ uri: post.image_url }} className="w-full h-48 rounded-lg mb-2" />
+                                        <Image source={{ uri: post.image_url }}
+                                               className="w-full h-48 rounded-lg mb-4 shadow-md" />
                                     )}
-                                    <Text className="text-gray-400 text-xs text-right mb-3">
-                                        {formatDate(post.created_at)}
-                                    </Text>
+                                    <Text className="text-gray-500 text-xs text-right mb-4">{formatDate(post.created_at)}</Text>
 
                                     {/* Like and Comment Actions */}
-                                    <View className="flex-row justify-between items-center pt-3 border-t border-gray-100">
+                                    <View className="flex-row justify-between items-center pt-4 border-t border-gray-200">
                                         <Pressable
                                             onPress={() => toggleLike(post.id, post.is_liked)}
                                             className="flex-row items-center"
@@ -750,7 +706,7 @@ export default function ProfileScreen() {
                                                 size={24}
                                                 color={post.is_liked ? 'red' : 'gray'}
                                             />
-                                            <Text className="mr-2 text-gray-600">{post.likes_count}</Text>
+                                            <Text className="ml-2 text-gray-600">{post.likes_count}</Text>
                                         </Pressable>
 
                                         <Pressable
@@ -758,54 +714,9 @@ export default function ProfileScreen() {
                                             className="flex-row items-center"
                                         >
                                             <Ionicons name="chatbubble-outline" size={24} color="gray" />
-                                            <Text className="mr-2 text-gray-600">{post.comments_count}</Text>
+                                            <Text className="ml-2 text-gray-600">{post.comments_count}</Text>
                                         </Pressable>
                                     </View>
-
-                                    {/* Comments Section */}
-                                    {showComments[post.id] && (
-                                        <View className="mt-4 pt-4 border-t border-gray-100">
-                                            {comments[post.id]?.map((comment: any) => (
-                                                <View key={comment.id} className="mb-3 flex-row">
-                                                    {comment.profiles?.avatar_url ? (
-                                                        <Image
-                                                            source={{ uri: comment.profiles.avatar_url }}
-                                                            className="w-8 h-8 rounded-full"
-                                                        />
-                                                    ) : (
-                                                        <View className="w-8 h-8 rounded-full bg-gray-300" />
-                                                    )}
-                                                    <View className="mr-2 flex-1 bg-gray-100 rounded-lg p-2">
-                                                        <Text className="font-semibold text-xs text-right mb-1">
-                                                            {comment.profiles?.full_name || 'مستخدم'}
-                                                        </Text>
-                                                        <Text className="text-right text-sm">{comment.content}</Text>
-                                                    </View>
-                                                </View>
-                                            ))}
-
-                                            <View className="flex-row items-center mt-2">
-                                                <TextInput
-                                                    className="flex-1 border border-gray-300 rounded-lg p-2 text-right"
-                                                    placeholder="اكتب تعليقاً..."
-                                                    value={newComment}
-                                                    onChangeText={setNewComment}
-                                                    onSubmitEditing={() => handleAddComment(post.id)}
-                                                />
-                                                <Pressable
-                                                    onPress={() => handleAddComment(post.id)}
-                                                    disabled={postingComment === post.id}
-                                                    className="mr-2"
-                                                >
-                                                    {postingComment === post.id ? (
-                                                        <ActivityIndicator size="small" />
-                                                    ) : (
-                                                        <Ionicons name="send" size={24} color="blue" />
-                                                    )}
-                                                </Pressable>
-                                            </View>
-                                        </View>
-                                    )}
                                 </View>
                             ))}
                         </View>
@@ -857,7 +768,7 @@ export default function ProfileScreen() {
             >
                 <View className="flex-1 bg-black/50 justify-end">
                     <View className="bg-white rounded-t-3xl p-6">
-                        <View className="flex-row justify-between items-center mb-4">
+                        <View className="flex-row justify-between items-center mb-6">
                             <Text className="text-xl font-bold text-right">تغيير الصورة الشخصية</Text>
                             <Pressable onPress={() => setShowImagePicker(false)}>
                                 <Ionicons name="close" size={28} color="gray" />
@@ -865,7 +776,7 @@ export default function ProfileScreen() {
                         </View>
                         <Pressable
                             onPress={handleChangeAvatar}
-                            className="bg-blue-500 p-4 rounded-lg"
+                            className="bg-blue-600 p-4 rounded-lg"
                         >
                             <Text className="text-white text-center font-bold">اختيار صورة</Text>
                         </Pressable>
